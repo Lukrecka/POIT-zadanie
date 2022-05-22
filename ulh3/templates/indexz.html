@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
  <head>
-  <title>Flask-SocketIO Test</title>
+  <title>POIT ZÁVEREČNÉ ZADANIE</title>
    <script type="text/javascript" src="//code.jquery.com/jquery-1.4.2.min.js"></script>
    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.5/socket.io.min.js"></script>
    <link rel="stylesheet" href="static/jquery-ui.min.css">
@@ -68,7 +68,7 @@
 
       socket.on('my_response', function(msg) {
         console.log(msg.data);
-        $('#log').append('Received #'+msg.count+': '+msg.data+'<br>').html(); 
+        $('#log').append('Prijaté #'+msg.count+': '+msg.data+'<br>').html(); 
         gauge.value = msg.data; 
         x.push(parseFloat(msg.count));
         y.push(parseFloat(msg.data));
@@ -99,11 +99,11 @@
           return false; });
       $('#buttonValStart').click(function(event) {
           console.log($('#buttonValStart').val());
-          socket.emit('click_event', {value: $('#buttonValStart').val()});
+          socket.emit('click_eventStart', {value: $('#buttonValStart').val()});
           return false; });
       $('#buttonValStop').click(function(event) {
           console.log($('#buttonValStop').val());
-          socket.emit('click_event', {value: $('#buttonValStop').val()});
+          socket.emit('click_eventStop', {value: $('#buttonValStop').val()});
           return false; });
       $('form#disconnect').submit(function(event) {
           socket.emit('disconnect_request');
@@ -113,60 +113,175 @@
           event: "mouseover"
         });
       } );        
-      });
+      //});
+
+     /* $('form#recordDb').submit(function(event) {
+                  var layout = {
+          title: 'Vykreslenie priebehu',
+          xaxis: {
+            title: 'count'
+          },
+          yaxis: {
+            title: 'y'
+          }
+        };
+                  
+      var $link = "dbdata/"+$('#valueDb').val();
+      */
+    $.ajax({
+      
+      type: "POST",
+      url: $link,
+      
+      /*
+      success:function(data) 
+      { console.log(data);  
+        data = JSON.parse(data);
+        console.log(data);    
+        n = Object.keys(data).length;
+        console.log(n);
+        
+        xl = [];
+        yl = [];
+        
+        for (var i=0; i< n; i++){
+          xl.push(data[i].x);
+          yl.push(data[i].y); 
+       }
+          
+        var trace = [{
+            x: xl,
+            y: yl}];  
+        
+        console.log("traces", trace);
+        Plotly.newPlot($('#plotdivId')[0],trace,layout);         
+      } */
+    }).done(function( o ) {
+       // do something
+    });    
+    
+      return false }); 
+      
+      $('form#textFile').submit(function(event) {
+                  var layout = {
+          title: 'Vykreslenie priebehu',
+          xaxis: {
+            title: 'počet'
+          },
+          yaxis: {
+            title: 'Hodnota'
+          }
+        };
+                  
+      var $link = "read/"+$('#valueFile').val();
+      
+    $.ajax({
+      type: "POST",
+      url: $link,
+      success:function(data) 
+      { console.log(data);  
+        data = JSON.parse(data);
+        console.log(data);    
+        n = Object.keys(data).length;
+        console.log(n);
+        
+        xl = [];
+        yl = [];
+        
+        for (var i=0; i< n; i++){
+          xl.push(data[i].x);
+          yl.push(data[i].y); 
+       }
+          
+        var trace = [{
+            x: xl,
+            y: yl}];  
+        
+        console.log("traces", trace);
+        Plotly.newPlot($('#plotDivFile')[0],trace,layout);         
+      }
+    }).done(function( o ) {
+       // do something
+    });    
+    
+      return false });
+              
     </script>
  </head>
  <body>
 	 <div id="tabs">
       <ul>
-        <li><a href="#tabs-1">Default</a></li>
+        <li><a href="#tabs-1">Výpis dát</a></li>
         <li><a href="#tabs-2">Graf</a></li>
-        <li><a href="#tabs-3">Cifernik</a></li>
+        <li><a href="#tabs-3">Ciferník</a></li>
+        <li><a href="#tabs-4">Graf - databáza</a></li>
+        <li><a href="#tabs-5">Graf - .txt súbor</a></li>
       </ul>
       <div id="tabs-1">
-          <h1>Flask-SocketIO Test</h1>
-			<h2>Send:</h2>
+          <h1>Záverečné zadanie POIT</h1>
+			<h2>Pošli:</h2>
 			
 			<form id="emit" method="POST" action='#'>
-			  <input type="text" name="emit_value" id="emit_value" placeholder="Amplituda">
+			  <input type="text" name="emit_value" id="emit_value" placeholder="vzdialenosť">
 			  <input type="submit" value="Send">
 			</form>
 			
-			<button id="buttonValStart" type="submit" value="start">start</button>
-			<button id="buttonValStop" type="submit" value="stop">stop</button>
+			<button id="buttonValStart" type="submit" value="start">ŠTART</button>
+			<button id="buttonValStop" type="submit" value="stop">STOP</button>
 			
 			<form id="disconnect" method="POST" action="#">
 			  <input type="submit" value="Disconnect">
 			</form> 
 			
-			<h2>Receive:</h2>
+			<h2>Prijaté dáta:</h2>
 			<div id="log"></div>
       </div>
       <div id="tabs-2">
-         <h1>Flask-SocketIO Test</h1>
-		  <h2>Send:</h2>
+         <h1>Graf</h1>
+		  <h2>Pošli:</h2>
 		  <form id="emit" method="POST" action='#'>
-			<input type="text" name="emit_value" id="emit_value" placeholder="Amplituda">
+			<input type="text" name="emit_value" id="emit_value" placeholder="vzdialenosť">
 			<input type="submit" value="Send">
 		  </form>
-		  <button id="buttonVal" type="submit" value="send">Send value</button>
+		  <button id="buttonVal" type="submit" value="send">Pošli</button>
 		  <form id="disconnect" method="POST" action="#">
 			<input type="submit" value="Disconnect">
 		  </form> 
 		  <div id="plotdiv" style="width:600px;height:250px;"></div>
-		  <h2>Receive:</h2>
+		  <h2>Prijaté dáta:</h2>
 		  <div id="log"></div>
       </div>
       <div id="tabs-3">
-         <h1>Flask-SocketIO Test</h1>
+         <h1>Ciferník</h1>
 		  <form id="disconnect" method="POST" action="#">
 			<input type="submit" value="Disconnect">
 		  </form> 
 		  <canvas id="canvasID"></canvas>
-		  <h2>Receive:</h2>
+		  <h2>Prijaté dáta:</h2>
 		  <div id="log"></div>
       </div>
+
+      <div id="tabs-4">
+        <h1>Graf - databáza</h1>
+     <form id="database" method="POST" action="#">
+      <input type="text" name="value" id="valueDB" placeholder="Záznam v databáze">
+     <input type="submit" value="OK">
+     </form> 
+     <div id="plotDivDB" style="width:600px;height:250px;"></div>
+     </div>
+
+     <div id="tabs-5">
+      <h1>Graf - .txt súbor</h1>
+   <form id="textFile" method="POST" action="#">
+    <input type="text" name="value" id="valueFile" placeholder="Číslo záznamu">
+   <input type="submit" value="OK">
+   </form> 
+   <div id="plotDivFile" style="width:600px;height:250px;"></div>
+   </div>
+
     </div>
+
+    
   
  </body>
 </html>
