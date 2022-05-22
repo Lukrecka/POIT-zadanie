@@ -15,14 +15,13 @@ void setup() {
 
 }
 void loop() {
-  //zadHod = 10;
+  
   if(Serial.available()) {
     zadHod = Serial.readString().toInt();
-    Serial.println(zadHod);
   }
   
   digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
+  delay(1000);
   digitalWrite(trigPin, HIGH);
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
