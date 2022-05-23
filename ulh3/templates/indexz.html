@@ -80,10 +80,10 @@
         layout = {
           title: 'Data',
           xaxis: {
-              title: 'x',
+              title: 'meranie',
           },
           yaxis: {
-              title: 'y',
+              title: 'Hodnota',
               //range: [-1,1]
           }
         };
@@ -241,15 +241,6 @@
       </div>
       <div id="tabs-2">
          <h1>Graf</h1>
-		  <h2>Pošli:</h2>
-		  <form id="emit" method="POST" action='#'>
-			<input type="text" name="emit_value" id="emit_value" placeholder="vzdialenosť">
-			<input type="submit" value="Send">
-		  </form>
-		  <button id="buttonVal" type="submit" value="send">Pošli</button>
-		  <form id="disconnect" method="POST" action="#">
-			<input type="submit" value="Disconnect">
-		  </form> 
 		  <div id="plotdiv" style="width:600px;height:250px;"></div>
 		  <div id="log"></div>
       </div>
