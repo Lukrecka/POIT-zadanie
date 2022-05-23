@@ -80,10 +80,10 @@
         layout = {
           title: 'Data',
           xaxis: {
-              title: 'x',
+              title: 'meranie',
           },
           yaxis: {
-              title: 'y',
+              title: 'Hodnota',
               //range: [-1,1]
           }
         };
@@ -108,6 +108,7 @@
       $('form#disconnect').submit(function(event) {
           socket.emit('disconnect_request');
           return false; }); 
+    
       $( function() {
         $( "#tabs" ).tabs({
           event: "mouseover"
@@ -115,25 +116,25 @@
       } );        
       //});
 
-     /* $('form#recordDb').submit(function(event) {
+      $('form#database').submit(function(event) {
                   var layout = {
           title: 'Vykreslenie priebehu',
           xaxis: {
-            title: 'count'
+            title: 'počet'
           },
           yaxis: {
-            title: 'y'
+            title: 'Hodnota'
           }
         };
                   
-      var $link = "dbdata/"+$('#valueDb').val();
-      */
+      var $link = "dbdata/"+$('#valueDB').val();
+      
     $.ajax({
       
       type: "POST",
       url: $link,
       
-      /*
+      
       success:function(data) 
       { console.log(data);  
         data = JSON.parse(data);
@@ -154,8 +155,8 @@
             y: yl}];  
         
         console.log("traces", trace);
-        Plotly.newPlot($('#plotdivId')[0],trace,layout);         
-      } */
+        Plotly.newPlot($('#plotDivDB')[0],trace,layout);         
+      } 
     }).done(function( o ) {
        // do something
     });    
@@ -205,6 +206,7 @@
     });    
     
       return false });
+  });
               
     </script>
  </head>
@@ -221,14 +223,15 @@
           <h1>Záverečné zadanie POIT</h1>
 			<h2>Pošli:</h2>
 			
-			<form id="emit" method="POST" action='#'>
+			<form id="emit" method="POST" action='/nastavHodnotu'>
 			  <input type="text" name="emit_value" id="emit_value" placeholder="vzdialenosť">
-			  <input type="submit" value="Send">
+			  <input type="submit"  value="Poslať">
 			</form>
 			
 			<button id="buttonValStart" type="submit" value="start">ŠTART</button>
 			<button id="buttonValStop" type="submit" value="stop">STOP</button>
-			
+	
+
 			<form id="disconnect" method="POST" action="#">
 			  <input type="submit" value="Disconnect">
 			</form> 
@@ -238,26 +241,12 @@
       </div>
       <div id="tabs-2">
          <h1>Graf</h1>
-		  <h2>Pošli:</h2>
-		  <form id="emit" method="POST" action='#'>
-			<input type="text" name="emit_value" id="emit_value" placeholder="vzdialenosť">
-			<input type="submit" value="Send">
-		  </form>
-		  <button id="buttonVal" type="submit" value="send">Pošli</button>
-		  <form id="disconnect" method="POST" action="#">
-			<input type="submit" value="Disconnect">
-		  </form> 
 		  <div id="plotdiv" style="width:600px;height:250px;"></div>
-		  <h2>Prijaté dáta:</h2>
 		  <div id="log"></div>
       </div>
       <div id="tabs-3">
-         <h1>Ciferník</h1>
-		  <form id="disconnect" method="POST" action="#">
-			<input type="submit" value="Disconnect">
-		  </form> 
+         <h1>Ciferník</h1> 
 		  <canvas id="canvasID"></canvas>
-		  <h2>Prijaté dáta:</h2>
 		  <div id="log"></div>
       </div>
 
@@ -281,7 +270,6 @@
 
     </div>
 
-    
   
  </body>
 </html>

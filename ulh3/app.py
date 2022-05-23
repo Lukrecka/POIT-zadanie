@@ -30,12 +30,12 @@ config = {
 
 
 
-#ser = serial.Serial("/dev/ttyUSB0", 9600)
+ser = serial.Serial("/dev/ttyUSB0", 9600)
 #ser.baudrate = 9600
 
 def background_thread(args):
 
-    ser = serial.Serial("/dev/ttyUSB0", 9600)
+    #ser = serial.Serial("/dev/ttyUSB0", 9600)
     cnx = mysql.connector.connect(**config)
     cursor = cnx.cursor()
 
@@ -52,7 +52,7 @@ def background_thread(args):
         data = ser.readline()
         
         data = str(data.strip(), 'UTF-8')
-        print(data)
+        #print(data)
 
         if args:
             A = dict(args).get('A')
@@ -62,11 +62,13 @@ def background_thread(args):
             btnV = 'nieco'
         
         btnV = dict(args).get('btn_value')
-        print(args)  
+        print(args)
+ 
         #socketio.sleep(2)
         count += 1
         dataCount += 1
- 
+    
+
         if btnV == 1:
 
             socketio.emit('my_response',
@@ -103,6 +105,15 @@ def hello():
 def graphlive():
     return render_template('indexz.html', async_mode=socketio.async_mode)
 
+@app.route('/dbdata/<string:num>', methods=['GET', 'POST'])
+def dbdata(num):
+    cnx = mysql.connector.connect(**config)
+    cursor = cnx.cursor()
+    print(num)
+    cursor.execute("SELECT Hodnota FROM  data1 WHERE id=%s", (num,))
+    rv = cursor.fetchone()
+    return str(rv[0])
+
 @app.route('/read/<string:num>', methods=['GET', 'POST'])
 def readmyfile(num):
     fo = open("static/file/output.txt","r")
@@ -111,17 +122,16 @@ def readmyfile(num):
 
 @socketio.on('my_event', namespace='/test')
 def test_message(message):   
-#    session['receive_count'] = session.get('receive_count', 0) + 1 
-    session['A'] = message['value']    
-#    emit('my_response',
-#         {'data': message['value'], 'count': session['receive_count']})
- 
+    session['A'] = message['value']   
+    ser.write(str(message['value']).encode()) 
+
 @socketio.on('disconnect_request', namespace='/test')
 def disconnect_request():
     session['receive_count'] = session.get('receive_count', 0) + 1
     emit('my_response',
          {'data': 'Disconnected!', 'count': session['receive_count']})
     disconnect()
+
 
 @socketio.on('connect', namespace='/test')
 def test_connect():
